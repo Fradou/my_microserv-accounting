@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fradou.accounting.utils.OperationCategory;
 
@@ -29,6 +30,7 @@ public class OperationTotal {
 	@Column(name = "id", updatable = false, nullable = false)
 	private int id;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
 	LocalDate operationMonth;
 	
 	@Enumerated(EnumType.ORDINAL)

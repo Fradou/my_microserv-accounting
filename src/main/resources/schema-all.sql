@@ -12,4 +12,4 @@ VIEW `v_operation_total` AS
         SUM(`o`.`amount`) AS `amount`
     FROM
         `operation` `o`
-    GROUP BY `operation_month` , `o`.`operation_category`
+    GROUP BY `operation_month` , `o`.`operation_category`;
