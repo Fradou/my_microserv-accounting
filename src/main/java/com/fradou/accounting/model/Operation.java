@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fradou.accounting.utils.OperationCategory;
 
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class Operation {
 	private int id;
 	
 	@Enumerated(EnumType.ORDINAL)
+	@JsonProperty("category")
 	private OperationCategory operationCategory;
 	
 	private BigDecimal amount;
 
+	@JsonProperty("date")
 	private LocalDate operationDate;
 }

@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import static java.time.temporal.TemporalAdjusters.*;
 import java.util.List;
 
+import javax.naming.OperationNotSupportedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,28 +26,44 @@ public class OperationController {
 
 	@GetMapping("/entry")
 	public List<Operation> getAccountEntries(
-			@RequestParam(value="type", required=false) String type,
-			@RequestParam(value="month", required=false) Integer month,
-			@RequestParam(value="year", required=false) Integer year){
+			@RequestParam(value="category", required=false) String category,
+			@RequestParam(value="year", required=false) Integer year,
+			@RequestParam(value="month", required=false) Integer month
+			){
 		
-		if(month != null && year != null) {
-			
-			LocalDate startDate = LocalDate.of(year, month, 1);
-			LocalDate endDate = startDate.with(lastDayOfMonth());
-			
-			if(type!=null) {
-				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(type.toUpperCase()), startDate, endDate);
-			}
-			else {
+		int queryParam = 0;
+		
+		queryParam += (category != null) ? 1 : 0;
+		queryParam += (year != null) ? 2 : 0;
+		queryParam += (month != null) ? 4 : 0;
+		
+		LocalDate startDate = null;
+		LocalDate endDate = null;
+		
+		if(queryParam >= 6) {
+			startDate = LocalDate.of(year, month, 1);
+			endDate = startDate.with(lastDayOfMonth());
+		}
+		else if (queryParam >= 2) {
+			startDate = LocalDate.of(year, 1, 1);
+			endDate = startDate.withDayOfYear(startDate.lengthOfYear());
+		}
+		
+		switch(queryParam) {
+			case 0:
+				return (List<Operation>) dao.findAll();
+			case 1:
+				return dao.findByOperationCategory(OperationCategory.valueOf(category.toUpperCase()));
+			case 2:
 				return dao.findByOperationDateBetween(startDate, endDate);
-			//	return dao.findByMonthAndYear(year, month);
-			}
-		}
-		else if (type!=null) {
-			return dao.findByOperationCategory(OperationCategory.valueOf(type.toUpperCase()));
-		}
-		else {
-			return (List<Operation>) dao.findAll();
+			case 3:
+				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(category.toUpperCase()), startDate, endDate);
+			case 6:
+				return dao.findByOperationDateBetween(startDate, endDate);
+			case 7:
+				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(category.toUpperCase()), startDate, endDate);
+			default:
+				throw new RuntimeException();
 		}
 	}
 	

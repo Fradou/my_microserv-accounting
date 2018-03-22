@@ -15,5 +15,5 @@ public interface OperationRepository extends CrudRepository<Operation, Integer> 
 	
 	public List<Operation> findByOperationDateBetween(LocalDate startDate, LocalDate endDate);
 	
-	public List<Operation> findByOperationCategoryAndOperationDateBetween(OperationCategory type, LocalDate startDate, LocalDate endDate);
+	public List<Operation> findByOperationCategoryAndOperationDateBetween(OperationCategory category, LocalDate startDate, LocalDate endDate);
 }
