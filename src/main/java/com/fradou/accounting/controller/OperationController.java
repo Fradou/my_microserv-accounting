@@ -6,11 +6,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fradou.accounting.model.Operation;
@@ -24,7 +28,7 @@ public class OperationController {
 	OperationRepository dao;
 
 	@GetMapping("/operation")
-	public List<Operation> getAccountEntries(
+	public List<Operation> getOperations(
 			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="year", required=false) Integer year,
 			@RequestParam(value="month", required=false) Integer month
@@ -43,7 +47,7 @@ public class OperationController {
 			startDate = LocalDate.of(year, month, 1);
 			endDate = startDate.with(lastDayOfMonth());
 		}
-		else if (queryParam >= 2) {
+		else if (queryParam >=2 && queryParam < 4) {
 			startDate = LocalDate.of(year, 1, 1);
 			endDate = startDate.withDayOfYear(startDate.lengthOfYear());
 		}
@@ -62,17 +66,17 @@ public class OperationController {
 			case 7:
 				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(category.toUpperCase()), startDate, endDate);
 			default:
-				throw new RuntimeException();
+				throw new IllegalArgumentException("Month without year isn't allowed !");
 		}
 	}
 	
 	@GetMapping("/operation/{id}")
-	public Operation getAccountEntry(@PathVariable("id") int id) {
+	public Operation getOperation(@PathVariable("id") int id) {
 		return dao.findById(id).get();
 	}
 
 	@PostMapping("/operation")
-	public int createAccountEntry(@RequestBody Operation entry) {
+	public int createOperation(@RequestBody Operation entry) {
 		return dao.save(entry).getId();
 	}
 }
