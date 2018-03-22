@@ -1,10 +1,9 @@
 package com.fradou.accounting.controller;
 
-import java.time.LocalDate;
-import static java.time.temporal.TemporalAdjusters.*;
-import java.util.List;
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
-import javax.naming.OperationNotSupportedException;
+import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +23,7 @@ public class OperationController {
 	@Autowired
 	OperationRepository dao;
 
-	@GetMapping("/entry")
+	@GetMapping("/operation")
 	public List<Operation> getAccountEntries(
 			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="year", required=false) Integer year,
@@ -67,20 +66,13 @@ public class OperationController {
 		}
 	}
 	
-	@GetMapping("/entry/{id}")
+	@GetMapping("/operation/{id}")
 	public Operation getAccountEntry(@PathVariable("id") int id) {
 		return dao.findById(id).get();
 	}
 
-	@PostMapping("/entry")
+	@PostMapping("/operation")
 	public int createAccountEntry(@RequestBody Operation entry) {
 		return dao.save(entry).getId();
-	}
-	
-	@GetMapping("/")
-	public List<Operation> getMonthly(
-			){
-		
-		return null;
 	}
 }
