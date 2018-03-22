@@ -33,4 +33,15 @@ public class Operation {
 
 	@JsonProperty("date")
 	private LocalDate operationDate;
+
+	public Operation(OperationCategory operationCategory, BigDecimal amount, LocalDate operationDate) {
+		super();
+		this.operationCategory = operationCategory;
+		this.amount = amount;
+		this.operationDate = operationDate;
+	}
+
+	public Operation() {
+		super();
+	}
 }
