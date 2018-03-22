@@ -6,29 +6,27 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fradou.accounting.model.Operation;
 import com.fradou.accounting.model.OperationRepository;
-import com.fradou.accounting.model.OperationTotal;
-import com.fradou.accounting.model.OperationTotalRepository;
 import com.fradou.accounting.utils.OperationCategory;
 
 @RestController
+@RequestMapping("/operation")
 public class OperationController {
 
 	@Autowired
 	OperationRepository dao;
-	
-	@Autowired
-	OperationTotalRepository totDao;
 
-	@GetMapping("/operation")
+	@GetMapping
 	public List<Operation> getOperations(
 			@RequestParam(value="category", required=false) String category,
 			@RequestParam(value="year", required=false) Integer year,
@@ -71,20 +69,18 @@ public class OperationController {
 		}
 	}
 	
-	@GetMapping("/operation/{id}")
+	@GetMapping("/{id}")
 	public Operation getOperation(@PathVariable("id") int id) {
 		return dao.findById(id).get();
 	}
 
-	@PostMapping("/operation")
+	@PostMapping
 	public int createOperation(@RequestBody Operation entry) {
 		return dao.save(entry).getId();
 	}
 	
-	@GetMapping("/operation/average")
-	public List<OperationTotal> getOperationAverage(
-			@RequestParam(value="category", required=false) String category
-			){
-		return totDao.findByOperationCategory(OperationCategory.valueOf(category.toUpperCase()));
+	@DeleteMapping("/{id}")
+	public void deleteOperation(@PathVariable int id) {
+		dao.deleteById(id);
 	}
 }
