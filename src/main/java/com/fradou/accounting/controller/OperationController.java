@@ -1,6 +1,7 @@
 package com.fradou.accounting.controller;
 
 import java.time.LocalDate;
+import static java.time.temporal.TemporalAdjusters.*;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,23 @@ public class OperationController {
 			@RequestParam(value="year", required=false) Integer year){
 		
 		if(month != null && year != null) {
-			return dao.findByMonthAndYear(year, month);
+			
+			LocalDate startDate = LocalDate.of(year, month, 1);
+			LocalDate endDate = startDate.with(lastDayOfMonth());
+			
+			if(type!=null) {
+				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(type.toUpperCase()), startDate, endDate);
+			}
+			else {
+				return dao.findByOperationDateBetween(startDate, endDate);
+			//	return dao.findByMonthAndYear(year, month);
+			}
+		}
+		else if (type!=null) {
+			return dao.findByOperationCategory(OperationCategory.valueOf(type.toUpperCase()));
 		}
 		else {
-			return dao.findByOperationCategory(OperationCategory.valueOf(type.toUpperCase()));
+			return (List<Operation>) dao.findAll();
 		}
 	}
 	
