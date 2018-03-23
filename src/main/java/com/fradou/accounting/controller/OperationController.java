@@ -69,8 +69,8 @@ public class OperationController {
 		}
 	}
 	
-	@GetMapping("/{id}")
-	public Operation getOperation(@PathVariable("id") int id) {
+	@GetMapping("{id}")
+	public Operation getOperation(@PathVariable int id) {
 		return dao.findById(id).get();
 	}
 
@@ -79,7 +79,7 @@ public class OperationController {
 		return dao.save(entry).getId();
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("{id}")
 	public void deleteOperation(@PathVariable int id) {
 		dao.deleteById(id);
 	}

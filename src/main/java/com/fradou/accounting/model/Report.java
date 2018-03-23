@@ -8,6 +8,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fradou.accounting.utils.OperationCategory;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +22,13 @@ import lombok.Setter;
 public class Report {
 
 	@EmbeddedId
+	@JsonUnwrapped
 	private ReportId id;
 	
 	private BigDecimal amount;
+	
+	public interface Total {	
+		OperationCategory getReportCategory();
+		BigDecimal getAmount();
+	}
 }
