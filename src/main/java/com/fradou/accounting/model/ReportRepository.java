@@ -8,5 +8,5 @@ import com.fradou.accounting.utils.OperationCategory;
 
 public interface ReportRepository extends CrudRepository<Report, ReportId> {
 
-	// List<Report> findByReportIdReportCategory(OperationCategory reportCategory);
+	List<Report> findByIdReportCategory(OperationCategory reportCategory);
 }
