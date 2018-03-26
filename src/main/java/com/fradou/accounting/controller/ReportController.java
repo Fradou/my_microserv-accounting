@@ -1,17 +1,18 @@
 package com.fradou.accounting.controller;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fradou.accounting.model.Report;
 import com.fradou.accounting.model.ReportRepository;
-import com.fradou.accounting.utils.OperationCategory;
 
 @RestController
 @RequestMapping("/report")
@@ -19,36 +20,38 @@ public class ReportController {
 
 	@Autowired
 	ReportRepository dao;
-
-	@GetMapping
-	public List<Report> getGlobalReport(
-			@RequestParam(required = false) String category,
-			@RequestParam(required = false) String year,
-			@RequestParam(required = false) String month,
-			@RequestParam(required = false) Boolean detailed
-			) {
-
-		if (category != null) {
-			return dao.findByIdReportCategory(OperationCategory.valueOf(category));
-		} else {
-			// return (List<Report>) dao.findAll();
-			
-			LocalDate startDate = LocalDate.now();
-			LocalDate endDate = startDate.minusYears(1);
-			System.out.println("Voilou voilou, start : " + startDate.toString() + " and end : " + endDate.toString());
-			
-			List<Report.Total> results = dao.getGlobalReport(startDate, endDate);
-			for(Report.Total catego : results) {
-				System.out.println("catego : " + catego.getReportCategory() + " - " + catego.getAmount());
-			}
-			
-			return (List<Report>) dao.findAll();
-		}
+	
+	@GetMapping("/total/{year}")
+	public List<Report.Total> getYearlyAverageRaport(@PathVariable int year){
+		
+		LocalDate startDate = LocalDate.ofYearDay(year, 1);
+		LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfYear());
+		
+		return dao.getTotalReport(startDate, endDate);
 	}
 	
-	/**@GetMapping("/year")
-	public List<Report>
+	@GetMapping("/total/{startDate}/{endDate}")
+	public List<Report.Total> getCustomAverageReport(
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+			){
+		return dao.getTotalReport(startDate, endDate);
+	}
 	
-	@GetMapping("/year/{year}")
-	public List<Report> getYearReport**/
+	@GetMapping("/detailed/{year}")
+	public List<Report> getYearlyDetailedReport(@PathVariable int year){
+
+		LocalDate startDate = LocalDate.ofYearDay(year, 1);
+		LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfYear());
+		
+		return dao.getDetailedReport(startDate, endDate);
+	}
+	
+	@GetMapping("/detailed/{startDate}/{endDate}")
+	public List<Report> getCustomDetailedReport(
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+			){
+		return dao.getDetailedReport(startDate, endDate);
+	}
 }

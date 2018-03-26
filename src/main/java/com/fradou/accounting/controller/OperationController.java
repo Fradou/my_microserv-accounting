@@ -1,6 +1,6 @@
 package com.fradou.accounting.controller;
 
-import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+import java.time.temporal.TemporalAdjusters;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,7 +44,7 @@ public class OperationController {
 		
 		if(queryParam >= 6) {
 			startDate = LocalDate.of(year, month, 1);
-			endDate = startDate.with(lastDayOfMonth());
+			endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
 		}
 		else if (queryParam >=2 && queryParam < 4) {
 			startDate = LocalDate.of(year, 1, 1);

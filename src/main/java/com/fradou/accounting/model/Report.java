@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fradou.accounting.utils.OperationCategory;
 
@@ -27,8 +29,12 @@ public class Report {
 	
 	private BigDecimal amount;
 	
-	public interface Total {	
+	@JsonPropertyOrder({"category", "amount"})
+	public interface Total {
+		
+		@JsonProperty("category")
 		OperationCategory getReportCategory();
+		
 		BigDecimal getAmount();
 	}
 }
