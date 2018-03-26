@@ -1,11 +1,11 @@
 package com.fradou.accounting.controller;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +32,10 @@ public class ReportController {
 	
 	@GetMapping("/total/{startDate}/{endDate}")
 	public List<Report.Total> getCustomAverageReport(
-			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+			@PathVariable YearMonth startDate,
+			@PathVariable YearMonth endDate
 			){
-		return dao.getTotalReport(startDate, endDate);
+		return dao.getTotalReport(startDate.atDay(1), endDate.atEndOfMonth());
 	}
 	
 	@GetMapping("/detailed/{year}")
@@ -49,9 +49,9 @@ public class ReportController {
 	
 	@GetMapping("/detailed/{startDate}/{endDate}")
 	public List<Report> getCustomDetailedReport(
-			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-			@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+			@PathVariable YearMonth startDate,
+			@PathVariable YearMonth endDate
 			){
-		return dao.getDetailedReport(startDate, endDate);
+		return dao.getDetailedReport(startDate.atDay(1), endDate.atEndOfMonth());
 	}
 }
