@@ -1,7 +1,9 @@
 package com.fradou.accounting.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fradou.accounting.model.Report;
@@ -22,20 +25,35 @@ public class ReportController {
 	ReportRepository dao;
 	
 	@GetMapping("/total/{year}")
-	public List<Report.Total> getYearlyAverageRaport(@PathVariable int year){
+	public List<Report.Total> getYearlyTotalRaport(
+			@PathVariable int year,
+			@RequestParam(required=false) boolean average
+		){
 		
 		LocalDate startDate = LocalDate.ofYearDay(year, 1);
 		LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfYear());
 		
-		return dao.getTotalReport(startDate, endDate);
+		if(average) {
+			return dao.getTotalReport(startDate, endDate, BigDecimal.valueOf(12));
+		}
+		else {
+			return dao.getTotalReport(startDate, endDate);
+		}
 	}
 	
 	@GetMapping("/total/{startDate}/{endDate}")
-	public List<Report.Total> getCustomAverageReport(
+	public List<Report.Total> getCustomTotalReport(
 			@PathVariable YearMonth startDate,
-			@PathVariable YearMonth endDate
+			@PathVariable YearMonth endDate,
+			@RequestParam(required=false) boolean average
 			){
-		return dao.getTotalReport(startDate.atDay(1), endDate.atEndOfMonth());
+		
+		if(average) {
+			return dao.getTotalReport(startDate.atDay(1), endDate.atEndOfMonth(), BigDecimal.valueOf(startDate.until(endDate, ChronoUnit.MONTHS)));
+		}
+		else {
+			return dao.getTotalReport(startDate.atDay(1), endDate.atEndOfMonth());
+		}
 	}
 	
 	@GetMapping("/detailed/{year}")
