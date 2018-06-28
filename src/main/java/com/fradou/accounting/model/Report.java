@@ -6,6 +6,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fradou.accounting.model.ReportId;
 import org.hibernate.annotations.Immutable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

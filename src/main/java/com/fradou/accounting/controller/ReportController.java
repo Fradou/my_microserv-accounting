@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fradou.accounting.model.Report;
-import com.fradou.accounting.model.ReportRepository;
+import com.fradou.accounting.dao.ReportRepository;
 import com.fradou.accounting.utils.OperationCategory;
 
 @RestController

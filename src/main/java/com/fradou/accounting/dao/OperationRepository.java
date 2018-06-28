@@ -1,8 +1,9 @@
-package com.fradou.accounting.model;
+package com.fradou.accounting.dao;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fradou.accounting.model.Operation;
 import org.springframework.data.repository.CrudRepository;
 
 import com.fradou.accounting.utils.OperationCategory;

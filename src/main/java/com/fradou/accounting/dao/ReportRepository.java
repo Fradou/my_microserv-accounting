@@ -1,9 +1,11 @@
-package com.fradou.accounting.model;
+package com.fradou.accounting.dao;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fradou.accounting.model.Report;
+import com.fradou.accounting.model.ReportId;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
