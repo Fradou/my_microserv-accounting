@@ -5,12 +5,13 @@ import java.time.temporal.TemporalAdjusters;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fradou.accounting.service.OperationService;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.fradou.accounting.model.Operation;
 import com.fradou.accounting.dao.OperationRepository;
-import com.fradou.accounting.utils.OperationCategory;
 
 @RestController
 @RequestMapping("/operation")
@@ -18,6 +19,9 @@ public class OperationController {
 
 	@Autowired
 	OperationRepository dao;
+
+	@Autowired
+	OperationService operationService;
 
 	@GetMapping
 	public List<Operation> getOperations(
@@ -48,15 +52,15 @@ public class OperationController {
 			case 0:
 				return (List<Operation>) dao.findAll();
 			case 1:
-				return dao.findByOperationCategory(OperationCategory.valueOf(category.toUpperCase()));
+				return operationService.getByCategory(category);
 			case 2:
-				return dao.findByOperationDateBetween(startDate, endDate);
+				return operationService.getByDate(startDate, endDate);
 			case 3:
-				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(category.toUpperCase()), startDate, endDate);
+				return operationService.getByCategoryAndDate(category, startDate, endDate);
 			case 6:
-				return dao.findByOperationDateBetween(startDate, endDate);
+				return operationService.getByDate(startDate, endDate);
 			case 7:
-				return dao.findByOperationCategoryAndOperationDateBetween(OperationCategory.valueOf(category.toUpperCase()), startDate, endDate);
+				return operationService.getByCategoryAndDate(category, startDate, endDate);
 			default:
 				throw new IllegalArgumentException("Month without year isn't allowed !");
 		}

@@ -4,16 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fradou.accounting.model.Category;
 import com.fradou.accounting.model.Report;
 import com.fradou.accounting.model.ReportId;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.fradou.accounting.utils.OperationCategory;
-
 public interface ReportRepository extends CrudRepository<Report, ReportId> {
 
-	List<Report> findByIdReportCategory(OperationCategory reportCategory);
+	List<Report> findByIdReportCategory(Category reportCategory);
 
 	List<Report> findByIdReportMonthBetweenOrderByIdReportMonthAscIdReportCategoryAsc(LocalDate startDate, LocalDate endDate);
 

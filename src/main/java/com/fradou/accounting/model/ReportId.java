@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fradou.accounting.utils.OperationCategory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,11 +23,10 @@ public class ReportId implements Serializable {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM")
 	private LocalDate reportMonth;
 	
-	@Enumerated(EnumType.ORDINAL)
 	@JsonProperty("category")
-	private OperationCategory reportCategory;
+	private Category reportCategory;
 
-	public ReportId(LocalDate reportMonth, OperationCategory reportCategory) {
+	public ReportId(LocalDate reportMonth, Category reportCategory) {
 		this.reportMonth = reportMonth;
 		this.reportCategory = reportCategory;
 	}
